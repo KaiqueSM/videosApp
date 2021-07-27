@@ -1,7 +1,9 @@
+import { DadosService } from './../services/dados.service';
 import { IFilme } from './../models/IFilme.models';
 import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tab1',
@@ -18,7 +20,8 @@ export class Tab1Page {
       duracao: '1h 50m',
       classificacao: 76,
       generos: ['Ação', 'Aventura', 'Fantasia'],
-      cartaz: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/ijvC2w2yANsfgLT3LMu2zFr0fxh.jpg'
+      cartaz: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/ijvC2w2yANsfgLT3LMu2zFr0fxh.jpg',
+      pagina: '/mortal-kombat'
     },
     {
       nome: 'O Senhor das Armas (2005)',
@@ -26,11 +29,21 @@ export class Tab1Page {
       duracao: '2h 2m',
       classificacao: 73,
       generos: ['Crime', 'Drama', 'Thriller'],
-      cartaz: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/yLxbDZ1h7wbHo7mkyX5AR9hjODe.jpg'
+      cartaz: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/yLxbDZ1h7wbHo7mkyX5AR9hjODe.jpg',
+      pagina: '/o-senhor-das-armas'
     }
   ];
 
-  constructor(public alertController: AlertController, public toastController: ToastController) {}
+  constructor(
+    public alertController: AlertController,
+    public toastController: ToastController,
+    public dadosService: DadosService,
+    public route: Router) {}
+
+  exibirFilme(filme: IFilme){
+    this.dadosService.guardarDados('filme', filme);
+    this.route.navigateByUrl('/dados-filme');
+  }
 
   async exibirAlertaFavorito() {
     const alert = await this.alertController.create({
