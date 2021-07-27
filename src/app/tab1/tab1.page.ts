@@ -11,7 +11,7 @@ import { ToastController } from '@ionic/angular';
 export class Tab1Page {
 
   titulo = 'Vídeos App';
-  listaVideos: IFilme[] = [
+  listaFilmes: IFilme[] = [
     {
       nome: 'Mortal Kombat (2021)',
       lancamento: '15/04/2021',
