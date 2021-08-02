@@ -1,18 +1,22 @@
+import { GeneroService } from './../services/genero.service';
+import { IFilmeApi, IListaFilmes } from './../models/IFilmeApi.model';
+import { FilmeService } from './../services/filme.service';
 import { DadosService } from './../services/dados.service';
 import { IFilme } from './../models/IFilme.models';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { IGenero } from '../models/IGenero.models';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-export class Tab1Page {
+export class Tab1Page implements OnInit{
 
-  titulo = 'Vídeos App';
+  titulo = 'Filmes';
   listaFilmes: IFilme[] = [
     {
       nome: 'Mortal Kombat (2021)',
@@ -34,13 +38,31 @@ export class Tab1Page {
     }
   ];
 
+  listaFilmesApi: IListaFilmes;
+  generos: string[] = [];
+
   constructor(
     public alertController: AlertController,
     public toastController: ToastController,
     public dadosService: DadosService,
-    public route: Router) {}
+    public filmeService: FilmeService,
+    public generoService: GeneroService,
+    public route: Router
+  ) {}
 
-  exibirFilme(filme: IFilme){
+  buscarFilmes(evento: any){
+    console.log(evento.target.value);
+    const busca = evento.target.value;
+
+    if (busca && busca.trim() !== ''){
+      this.filmeService.buscarFilmes(busca).subscribe(dados => {
+        console.log(dados);
+        this.listaFilmesApi = dados;
+      });
+    }
+  }
+
+  exibirFilme(filme: IFilmeApi){
     this.dadosService.guardarDados('filme', filme);
     this.route.navigateByUrl('/dados-filme');
   }
@@ -75,6 +97,15 @@ export class Tab1Page {
       color: 'success'
     });
     toast.present();
+  }
+
+  ngOnInit(){
+    this.generoService.buscarGeneros().subscribe(dados =>{
+      console.log('Generos: ',dados.genres);
+      dados.genres.forEach(genero =>{
+        this.generos[genero.id] = genero.name;
+      });
+    });
   }
 
 }

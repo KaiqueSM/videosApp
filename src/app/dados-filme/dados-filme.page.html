@@ -10,21 +10,25 @@
 <ion-content>
   <ion-card *ngIf="filme">
     <ion-card-header>
-      <img [src]="filme.cartaz" alt="">
+      <img *ngIf="filme.poster_path"
+      src="https://www.themoviedb.org/t/p/w500/{{filme.poster_path}}">
+      <ion-icon name="videocam-off" *ngIf="!filme.poster_path"></ion-icon>
     </ion-card-header>
 
     <ion-card-content>
       <h1>
-        {{filme.nome}} -
-        <ion-chip color="success">
-          {{filme.classificacao}}%
+        {{filme.title}} -
+        <ion-chip [color]="filme.vote_average < 5 ? 'danger' : filme.vote_average < 7? 'warning' : 'success'">
+          {{filme.vote_average}}
         </ion-chip>
       </h1>
-      <p>{{filme.lancamento}} - {{filme.duracao}}</p>
+      <p>{{filme.release_date | date: 'shortDate'}}</p>
+      <p>{{filme.overview}}</p>
+
     </ion-card-content>
     <ion-item>
-      <ion-badge color="light" *ngFor="let gen of filme.generos">
-        {{gen}}
+      <ion-badge color="light" *ngFor="let genId of filme.genre_ids">
+        {{generos[genId]}}
       </ion-badge>
     </ion-item>
   </ion-card>
